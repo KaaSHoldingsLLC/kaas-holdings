@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KaaS Holdings LLC — Sovereignty Infrastructure</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --dark: #080A0F;
+    --dark-2: #0D1117;
+    --dark-3: #141920;
+    --dark-4: #1C2333;
+    --text: #E8EAF0;
+    --text-muted: #8892A4;
+    --accent: #4A9EFF;
+    --green: #2ECC8A;
+    --border: rgba(201,168,76,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(8,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: var(--text-muted); font-weight: 400; }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--dark) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--dark) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 60%, rgba(74,158,255,0.05) 0%, transparent 50%),
+      radial-gradient(ellipse 30% 40% at 20% 80%, rgba(46,204,138,0.04) 0%, transparent 50%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 70%);
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    max-width: 860px;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-sub strong { color: var(--text); }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--dark);
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--dark-3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem 4rem;
+    display: flex;
+    justify-content: center;
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+
+  /* ── SECTION STYLES ── */
+  section { padding: 6rem 2rem; position: relative; }
+
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 3.5rem;
+  }
+
+  /* ── MISSION ── */
+  .mission { background: var(--dark-2); }
+
+  .mission-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .mission-quote {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text);
+    border-left: 3px solid var(--gold);
+    padding-left: 1.5rem;
+  }
+
+  .mission-quote em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  .mission-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pillar {
+    background: var(--dark-4);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .pillar:hover {
+    border-color: rgba(201,168,76,0.4);
+    transform: translateX(4px);
+  }
+
+  .pillar-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .pillar-title {
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .pillar-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── PRODUCTS ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .product-card:hover {
+    border-color: rgba(201,168,76,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .product-card:hover::before { opacity: 1; }
+
+  .product-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 0.75rem;
+    border-radius: 100px;
+    margin-bottom: 1.25rem;
+  }
+
+  .status-live {
+    background: rgba(46,204,138,0.1);
+    color: var(--green);
+    border: 1px solid rgba(46,204,138,0.25);
+  }
+
+  .status-live::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--green);
+    animation: pulse 2s infinite;
+  }
+
+  .status-build {
+    background: rgba(74,158,255,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(74,158,255,0.25);
+  }
+
+  .status-build::before {
+    content: '◆';
+    font-size: 0.5rem;
+  }
+
+  .status-new {
+    background: rgba(201,168,76,0.1);
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.25);
+  }
+
+  .status-new::before {
+    content: '★';
+    font-size: 0.6rem;
+  }
+
+  .product-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .product-category {
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+  }
+
+  .product-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .product-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    background: var(--dark-4);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* ── ECOSYSTEM MAP ── */
+  .ecosystem { background: var(--dark-2); }
+
+  .ecosystem-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  .ecosystem-table th {
+    text-align: left;
+    padding: 1rem 1.25rem;
+    color: var(--gold);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .ecosystem-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  .ecosystem-table tr:hover td {
+    background: rgba(201,168,76,0.03);
+  }
+
+  .ecosystem-table td:first-child {
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .ecosystem-table td:nth-child(2) {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* ── CONTACT ── */
+  .contact-wrapper {
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .contact-wrapper h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .contact-wrapper p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
+
+  .contact-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--dark-4);
+    border: 1px solid var(--border);
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    margin-bottom: 1.5rem;
+  }
+
+  .contact-email:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.08);
+    transform: translateY(-2px);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark-2);
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 1rem;
+  }
+
+  .footer-copy {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .footer-tagline {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .stats-bar { padding: 1.5rem 2rem; gap: 2rem; }
+    .mission-grid { grid-template-columns: 1fr; }
+    .products-grid { grid-template-columns: 1fr; }
+    .contact-wrapper { padding: 2rem 1.5rem; }
+    footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">KaaS<span> Holdings LLC</span></a>
+  <ul class="nav-links">
+    <li><a href="#mission">Mission</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#ecosystem">Ecosystem</a></li>
+    <li><a href="#contact" class="nav-cta">Connect</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">KaaS Holdings LLC — Est. 2024</div>
+    <h1>
+      Infrastructure for<br>
+      <span class="highlight">Individual Sovereignty</span>
+    </h1>
+    <p class="hero-sub">
+      We build the tools, frameworks, and systems that return
+      <strong>financial, legal, creative, and physical sovereignty</strong>
+      to the individual — by design, not by permission.
+    </p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary">View Our Products →</a>
+      <a href="#contact" class="btn-secondary">Work With Us</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat">
+    <span class="stat-number">4</span>
+    <span class="stat-label">Live Products</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">9+</span>
+    <span class="stat-label">Proprietary Systems</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">1</span>
+    <span class="stat-label">Unified Mission</span>
+  </div>
+  <div class="stat">
+    <span class="stat-number">∞</span>
+    <span class="stat-label">People to Reach</span>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section class="mission" id="mission">
+  <div class="section-inner">
+    <p class="section-label">Our Purpose</p>
+    <div class="mission-grid">
+      <div>
+        <div class="mission-quote">
+          "To bring people back to their <em>sovereignty</em> — over their space, their money, their legal standing, and their story."
+        </div>
+      </div>
+      <div class="mission-pillars">
+        <div class="pillar">
+          <div class="pillar-icon">🏛️</div>
+          <div>
+            <div class="pillar-title">Legal Sovereignty</div>
+            <div class="pillar-desc">Tools that translate and navigate institutional legal systems — empowering individuals to assert their rights without gatekeepers.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">💰</div>
+          <div>
+            <div class="pillar-title">Financial Sovereignty</div>
+            <div class="pillar-desc">Frameworks that decode financial systems, detect irregularities, and restore individual control over economic standing.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🔒</div>
+          <div>
+            <div class="pillar-title">Physical & Digital Privacy</div>
+            <div class="pillar-desc">Architecture that protects personal space and data by structural design — not policy promises.</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon">🎨</div>
+          <div>
+            <div class="pillar-title">Creative Sovereignty</div>
+            <div class="pillar-desc">Engines for owning your narrative, your art, and your intellectual output — fully and unconditionally.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <div class="section-inner">
+    <p class="section-label">Our Portfolio</p>
+    <h2 class="section-title">What We're Building</h2>
+    <p class="section-sub">Every product under KaaS Holdings is a doorway into the same mission — expressed across finance, law, privacy, and creative output.</p>
+
+    <div class="products-grid">
+
+      <!-- FINLEX -->
+      <div class="product-card">
+        <div class="product-status status-live">Live</div>
+        <div class="product-category">Regulatory Technology</div>
+        <div class="product-name">FinLex</div>
+        <div class="product-desc">A regulatory compliance notification service that monitors, parses, and alerts individuals and organizations to relevant regulatory changes — in plain language.</div>
+        <div class="product-tags">
+          <span class="tag">Compliance</span>
+          <span class="tag">AI-Powered</span>
+          <span class="tag">FinTech</span>
+        </div>
+      </div>
+
+      <!-- IDENTITY-LOCATOR -->
+      <div class="product-card">
+        <div class="product-status status-live">Live</div>
+        <div class="product-category">Identity Infrastructure</div>
+        <div class="product-name">Identity-Locator</div>
+        <div class="product-desc">A published application focused on identity tracking and verification — providing individuals with tools to locate, confirm, and control their own identity records.</div>
+        <div class="product-tags">
+          <span class="tag">Identity</span>
+          <span class="tag">Verification</span>
+          <span class="tag">Sovereignty</span>
+        </div>
+      </div>
+
+      <!-- BASE44 SUPERAGENTS -->
+      <div class="product-card">
+        <div class="product-status status-live">Live</div>
+        <div class="product-category">AI Automation</div>
+        <div class="product-name">KaaS Superagents</div>
+        <div class="product-desc">Proprietary AI automation systems deployed for CRM management, client communications, and SEO operations — purpose-built intelligence for sovereign business operations.</div>
+        <div class="product-tags">
+          <span class="tag">AI Agents</span>
+          <span class="tag">Automation</span>
+          <span class="tag">CRM</span>
+        </div>
+      </div>
+
+      <!-- CO-EXECUTOR -->
+      <div class="product-card">
+        <div class="product-status status-build">In Development</div>
+        <div class="product-category">Legal Technology</div>
+        <div class="product-name">Co-Executor</div>
+        <div class="product-desc">An AI-powered estate settlement and document processing system — automating the procedural engine of probate, estate administration, and legal documentation.</div>
+        <div class="product-tags">
+          <span class="tag">Estate Law</span>
+          <span class="tag">Document AI</span>
+          <span class="tag">LegalTech</span>
+        </div>
+      </div>
+
+      <!-- LEXICHRON -->
+      <div class="product-card">
+        <div class="product-status status-build">In Development</div>
+        <div class="product-category">Financial Intelligence</div>
+        <div class="product-name">Lexichron / RATA</div>
+        <div class="product-desc">An autonomous financial monitoring and workflow orchestration suite — mapping complex financial flows, detecting anomalies, and aligning assets to mission objectives.</div>
+        <div class="product-tags">
+          <span class="tag">Financial AI</span>
+          <span class="tag">Analytics</span>
+          <span class="tag">Compliance</span>
+        </div>
+      </div>
+
+      <!-- SOCRATESOS -->
+      <div class="product-card">
+        <div class="product-status status-build">In Development</div>
+        <div class="product-category">Discourse Platform</div>
+        <div class="product-name">SocratesOS</div>
+        <div class="product-desc">A digital discourse platform built on a value-sensitive AI evaluation layer — designed to elevate the quality, depth, and integrity of digital conversation.</div>
+        <div class="product-tags">
+          <span class="tag">Platform</span>
+          <span class="tag">AI Ethics</span>
+          <span class="tag">Discourse</span>
+        </div>
+      </div>
+
+      <!-- MYMANIA -->
+      <div class="product-card">
+        <div class="product-status status-build">In Development</div>
+        <div class="product-category">Creative Technology</div>
+        <div class="product-name">MyMania Engine</div>
+        <div class="product-desc">A proprietary multimedia creative architecture built for non-linear storytelling, workflow orchestration, and generative trading card mechanics. Your story. Your rules.</div>
+        <div class="product-tags">
+          <span class="tag">Creative</span>
+          <span class="tag">Multimedia</span>
+          <span class="tag">Generative</span>
+        </div>
+      </div>
+
+      <!-- DNG-SBS -->
+      <div class="product-card">
+        <div class="product-status status-new">Emerging</div>
+        <div class="product-category">Privacy Infrastructure</div>
+        <div class="product-name">Project DNG-SBS</div>
+        <div class="product-desc">A next-generation privacy-first spatial sensing architecture — converting environmental signals into lightweight numerical snapshots. Sovereignty over your physical space.</div>
+        <div class="product-tags">
+          <span class="tag">RF Sensing</span>
+          <span class="tag">Privacy-First</span>
+          <span class="tag">Edge Compute</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section class="ecosystem" id="ecosystem">
+  <div class="section-inner">
+    <p class="section-label">The Architecture</p>
+    <h2 class="section-title">One Mission. Every Domain.</h2>
+    <p class="section-sub">KaaS Holdings operates as an integrated sovereignty ecosystem — each product addressing a different dimension of individual empowerment.</p>
+
+    <table class="ecosystem-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Domain</th>
+          <th>Sovereignty Layer</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>FinLex</td><td>Regulatory compliance alerts in plain language</td><td>Financial</td><td><span class="product-status status-live" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Live</span></td></tr>
+        <tr><td>Identity-Locator</td><td>Identity tracking and verification</td><td>Legal / Identity</td><td><span class="product-status status-live" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Live</span></td></tr>
+        <tr><td>KaaS Superagents</td><td>AI automation for business operations</td><td>Operational</td><td><span class="product-status status-live" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Live</span></td></tr>
+        <tr><td>Co-Executor</td><td>Estate settlement and legal document AI</td><td>Legal / Estate</td><td><span class="product-status status-build" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Building</span></td></tr>
+        <tr><td>Lexichron / RATA</td><td>Financial monitoring and orchestration</td><td>Financial</td><td><span class="product-status status-build" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Building</span></td></tr>
+        <tr><td>SocratesOS</td><td>Value-driven digital discourse</td><td>Intellectual</td><td><span class="product-status status-build" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Building</span></td></tr>
+        <tr><td>MyMania Engine</td><td>Creative multimedia architecture</td><td>Creative</td><td><span class="product-status status-build" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Building</span></td></tr>
+        <tr><td>Project DNG-SBS</td><td>Privacy-first spatial sensing</td><td>Physical Space</td><td><span class="product-status status-new" style="font-size:0.7rem;padding:0.2rem 0.6rem;">Emerging</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-wrapper">
+      <p class="section-label" style="margin-bottom:1rem;">Get In Touch</p>
+      <h2>Let's Build Together</h2>
+      <p>Investors, collaborators, legal partners, and aligned individuals — if you believe sovereignty is a right, not a privilege, we want to hear from you.</p>
+      <br>
+      <a href="mailto:kasandra.elson@gmail.com" class="contact-email">
+        ✉ kasandra.elson@gmail.com
+      </a>
+      <br><br>
+      <p style="font-size:0.8rem; color:var(--text-muted);">KaaS Holdings LLC · Phoenix, Arizona · All systems and frameworks are proprietary IP of KaaS Holdings LLC</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">KaaS Holdings LLC</div>
+  <div class="footer-copy">© 2025 KaaS Holdings LLC. All rights reserved.</div>
+  <div class="footer-tagline">"Sovereignty is not given. It is built."</div>
+</footer>
+
+</body>
+</html>

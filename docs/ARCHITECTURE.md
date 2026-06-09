@@ -4,7 +4,7 @@
 The KaaS Holdings portfolio is not a collection of isolated apps. Every framework we build integrates into a unified operating layer. Our systems are designed to share a common technical DNA: **Local Execution, Data Minimization, and Cryptographic Sovereignty.**
 
 ```
-          [ THE INDIVIDUAL (Sovereign Core) ]
+          [ THE living soul (Sovereign Core) ]
                           │
        ┌──────────────────┼──────────────────┐
        ▼                  ▼                  ▼
